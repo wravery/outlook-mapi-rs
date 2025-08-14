@@ -39,14 +39,13 @@ impl Row {
     }
 
     /// Iterate over the [`sys::SPropValue`] column values in the [`Row`].
-    pub fn iter(&self) -> impl Iterator<Item = PropValue> {
+    pub fn iter(&self) -> impl Iterator<Item = PropValue<'_>> {
         if self.props.is_null() {
             vec![]
         } else {
             unsafe {
                 let data: &[sys::SPropValue] = slice::from_raw_parts(self.props, self.count);
-                let data = data.iter().map(PropValue::from).collect();
-                data
+                data.iter().map(PropValue::from).collect()
             }
         }
         .into_iter()
